@@ -12,13 +12,14 @@ import argparse
 def get_infos(url, verify=True):
     r = requests.get(url, verify=verify)
     soup = BeautifulSoup(r.content, "lxml")
-    table = soup.find("table")
+    table = soup.findAll("table")[1]
     data = []
     if table is not None:
-        for row in table.findAll("tr"):
+        columns = [td.text for td in table.findAll("th")]
+        for row in table.findAll("tr")[1:]:
             # Srv	PID	Acc	M	CPU 	SS	Req	Conn	Child	Slot	Client	VHost	Request
             values = [td.text for td in row.findAll("td")]
-            columns = ["Srv", "PID", "Acc", "M", "CPU", "SS", "Req", "Conn", "Child", "Slot", "Client", "VHost", "Request"]
+            # columns = ["Srv", "PID", "Acc", "M", "CPU", "SS", "Req", "Conn", "Child", "Slot", "Client", "VHost", "Request"]
             values = {columns[k]: values[k] for k in range(len(values))}
             if len(values.keys()) != 0:
                 data.append(values)
@@ -39,7 +40,7 @@ def parseArgs():
 if __name__ == '__main__':
     options = parseArgs()
 
-    if options.target.startswith("http://") and not options.target.startswith("https://"):
+    if not options.target.startswith("http://") and not options.target.startswith("https://"):
         options.target = "http://" + options.target
 
     if options.insecure_tls:
@@ -54,7 +55,7 @@ if __name__ == '__main__':
 
     urls = []
 
-    r = requests.get(options.target)
+    r = requests.get(options.target, verify=(not options.insecure_tls))
     if b"Apache Server Status" in r.content:
         running = True
         while running:

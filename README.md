@@ -35,7 +35,13 @@ optional arguments:
 
 ## Example
 
+If you have access to the Apache Server Status:
 
+![](./.github/apache_server_status.png)
+
+You can use this tool to list all URLs:
+
+![](./.github/example.png)
 
 ## Contributions
 
