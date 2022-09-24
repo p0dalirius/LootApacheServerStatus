@@ -1,4 +1,4 @@
-# LootApacheServerStatus
+![](./.github/banner.png)
 
 <p align="center">
     A script to automatically dump all URLs present in /server-status to a file locally.
